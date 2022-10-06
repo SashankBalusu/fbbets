@@ -1,0 +1,72 @@
+* {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Secular One', sans-serif;
+}
+#choose {
+    display: grid;
+    grid-template-columns: 54% 60%;
+    grid-template-areas: "team1 team2";
+}
+#team1 {
+    display: grid;
+    height: 100vh;
+    grid-area: team1;
+    -webkit-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: skew(-45deg);
+  -ms-transform: skew(-45deg);
+  transform: skew(345deg);
+
+}
+#team2 {
+    display: grid;
+    grid-area: team2;
+    width: 100%;
+    -webkit-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: skew(345deg);
+  -ms-transform: skew(345deg);
+  transform: skew(345deg);
+
+}
+#team1Name {
+    margin-top: 37%;
+    text-align: center;
+    font-size: 70px;
+}
+#team2Name {
+    color: rgb(0, 0, 0);
+    margin-top: 33%;
+    text-align: center;
+    font-size: 70px;
+
+}
+#currTurn {
+    position: absolute;
+    font-size: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+#doneChoose {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(158, 231, 245, 0.75);
+}
+#alldone {
+    position: absolute;
+    font-size: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin-top: 15%;
+}
