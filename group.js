@@ -738,6 +738,40 @@ const colorJSON = {
     'SEA': "rgba(0, 34, 68, 0.5)",
     'WSH': "rgba(90, 20, 20, 0.5)"
 }
+const teamJSON = {
+  "ARI": "Cardinals",
+  'ATL': "Falcons",
+  'BAL': "Ravens",
+  'BUF': "Bills",
+  'CAR': "Panthers",
+  'CHI': "Bears",
+  'CLE': "Browns",
+  'DAL': "Cowboys",
+  'DEN': "Broncos",
+  'DET': "Lions",
+  'GB': "Packers",
+  'HOU': "Texans",
+  'KC': "Chiefs",
+  'MIA': "Dolphins",
+  'NO': "Saints",
+  'TEN': "Titans",
+  'PHI': "Eagles",
+  'TB': "Buccaneers",
+  'CIN': "Bengals",
+  'PIT': "Steelers",
+  'SF': "49ers",
+  'MIN': "Vikings",
+  'LAC': "Chargers",
+  'LAR': "Rams",
+  'IND': "Colts",
+  'NE': "Patriots",
+  'NYG': "Giants",
+  'JAX': "Jaguars",
+  'LV': "Raiders",
+  'NYJ': "Jets",
+  'SEA': "Seahawks",
+  'WSH': "Commanders"
+}
 console.log(group)
 get(ref(database, `groups/${group}/`)).then((info) => {
     if ((info.exists())){
@@ -789,9 +823,9 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
         const team2 = document.getElementById("team2")
         
         
-        team1Name.textContent = team1Arr[count]
+        team1Name.textContent = teamJSON[team1Arr[count]]
         team1.setAttribute("style", `background-color: ${colorJSON[team1Arr[count]]}`)
-        team2Name.textContent = team2Arr[count]
+        team2Name.textContent = teamJSON[team2Arr[count]]
         team2.setAttribute("style", `background-color: ${colorJSON[team2Arr[count]]}`)
         team1.addEventListener("click", function(){
             if (playerOneTurn == true){
@@ -826,9 +860,9 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
                     
                 })
             }
-            team1Name.textContent = team1Arr[count]
+            team1Name.textContent = teamJSON[team1Arr[count]]
             team1.setAttribute("style", `background-color: ${colorJSON[team1Arr[count]]}`)
-            team2Name.textContent = team2Arr[count]
+            team2Name.textContent = teamJSON[team2Arr[count]]
             team2.setAttribute("style", `background-color: ${colorJSON[team2Arr[count]]}`)
         
         }) 
@@ -867,20 +901,51 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
                 console.log(playerOnePicks, playerTwoPicks)
         
             }
-            team1Name.textContent = team1Arr[count]
+            team1Name.textContent = teamJSON[team1Arr[count]]
             team1.setAttribute("style", `background-color: ${colorJSON[team1Arr[count]]}`)
-            team2Name.textContent = team2Arr[count]
+            team2Name.textContent = teamJSON[team2Arr[count]]
             team2.setAttribute("style", `background-color: ${colorJSON[team2Arr[count]]}`)
         
         })
     }
     else {
-        if (day != 2){
-            const choose = document.getElementById("choose")
-            const doneChoose = document.getElementById("doneChoose")
-            choose.setAttribute("style", "display: none;")
-            doneChoose.setAttribute("style", "display: block;")
-        }
+      const d = new Date();
+      let day = d.getDay();
+      day = 1
+      if (day != 2){
+          const choose = document.getElementById("choose")
+          const doneChoose = document.getElementById("doneChoose")
+          choose.setAttribute("style", "display: none;")
+          doneChoose.setAttribute("style", "display: block;")
+      }
+      else {
+        const choose = document.getElementById("choose")
+        choose.setAttribute("style", "display: none;")
+        const options = {
+          method: 'GET',
+          headers: {
+              'X-RapidAPI-Key': '166911f3b9msh094793efec2dab1p1da39fjsn7a618c24371c',
+              'X-RapidAPI-Host': 'nfl-schedule.p.rapidapi.com'
+          }
+          };
+          
+          fetch('https://nfl-schedule.p.rapidapi.com/v1/schedules', options)
+            .then(response => response.json())
+            .then(response => {
+                  console.log(response)
+                  let matchups = response["data"]
+                  for (let i of matchups){
+                      console.log(i["awayTeam"]["name"])
+                      console.log(i["homeTeam"]["name"])
+                      if ("score" in i["awayTeam"]){
+                          console.log(i["awayTeam"]["score"])
+                          console.log(i["homeTeam"]["score"])            
+                      }
+          
+                  }
+              })
+            .catch(err => console.error(err));
+      }
     }
       
       
@@ -888,34 +953,10 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
       console.error(error);
   });
 
-const d = new Date();
-let day = d.getDay();
 
 
 
 
 
-const options = {
-method: 'GET',
-headers: {
-    'X-RapidAPI-Key': '166911f3b9msh094793efec2dab1p1da39fjsn7a618c24371c',
-    'X-RapidAPI-Host': 'nfl-schedule.p.rapidapi.com'
-}
-};
 
-fetch('https://nfl-schedule.p.rapidapi.com/v1/schedules', options)
-	.then(response => response.json())
-	.then(response => {
-        console.log(response)
-        let matchups = response["data"]
-        for (let i of matchups){
-            console.log(i["awayTeam"]["name"])
-            console.log(i["homeTeam"]["name"])
-            if ("score" in i["awayTeam"]){
-                console.log(i["awayTeam"]["score"])
-                console.log(i["homeTeam"]["score"])            
-            }
 
-        }
-    })
-	.catch(err => console.error(err));
