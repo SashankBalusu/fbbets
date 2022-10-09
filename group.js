@@ -7,6 +7,9 @@ function httpGet(theUrl)
     xmlHttp.send( null );
     return xmlHttp.responseText;
 }
+function insertAfter(newNode, existingNode) {
+  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+}
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -909,18 +912,12 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
         })
     }
     else {
-      const d = new Date();
-      let day = d.getDay();
-      day = 1
-      if (day != 2){
-          const choose = document.getElementById("choose")
-          const doneChoose = document.getElementById("doneChoose")
-          choose.setAttribute("style", "display: none;")
-          doneChoose.setAttribute("style", "display: block;")
-      }
-      else {
         const choose = document.getElementById("choose")
         choose.setAttribute("style", "display: none;")
+        const results = document.getElementById("results")
+        results.setAttribute("style", "display: grid;")
+        const weekRes = document.getElementById("weekRes")
+        const allTimeRes = document.getElementById("allTimeRes")
         const options = {
           method: 'GET',
           headers: {
@@ -934,18 +931,130 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
             .then(response => {
                   console.log(response)
                   let matchups = response["data"]
+                  console.log(info.val())
+                  let playerOnePicks = info.val()["playerOnePicks"]
+                  let playerTwoPicks = info.val()["playerTwoPicks"]
+                  console.log(playerOnePicks)
+                  console.log(playerTwoPicks)
+                  if (week%2 == 0){
+                    let temp = name1
+                    name1 = name2
+                    name2 = temp
+                  }
+
+                  let name1Wins = 0
+                  let name2Wins = 0
+                  let numtbd = 0
+                  console.log(name2)
+
                   for (let i of matchups){
-                      console.log(i["awayTeam"]["name"])
-                      console.log(i["homeTeam"]["name"])
-                      if ("score" in i["awayTeam"]){
-                          console.log(i["awayTeam"]["score"])
-                          console.log(i["homeTeam"]["score"])            
+                      let awayName = i["awayTeam"]["name"]
+                      let homeName = i["homeTeam"]["name"]
+                      let awayScore = i["awayTeam"]["score"]
+                      let homeScore = i["homeTeam"]["score"] 
+
+                      let winner
+
+                      if (awayScore == 0 && homeScore == 0){
+                        let p = document.createElement("p")
+                        p.textContent = i["shortName"] + " - tbd"
+                        weekRes.appendChild(p)
+                        numtbd++
+                        continue
                       }
+                      else if (parseInt(awayScore) > parseInt(homeScore)){
+                        console.log("temp")
+                        winner = awayName
+                      }
+                      else {
+                        winner = homeName
+                      }
+                      if (playerOnePicks.includes(winner)){
+                        let p = document.createElement("p")
+                        p.textContent = i["shortName"] + " - " + name1
+                        weekRes.appendChild(p)
+                        name1Wins ++
+                      }
+                      else {
+                        let p = document.createElement("p")
+                        p.textContent = i["shortName"] + " - " + name2
+                        weekRes.appendChild(p)
+                        name2Wins ++
+                      }
+
           
                   }
+                  let h3 = document.createElement("h3")
+                  if (name1Wins > name2Wins){
+                    h3.textContent = `${name1} is ahead ${name1Wins} - ${name2Wins}`
+                  }
+                  else {
+                    h3.textContent = `${name2} is ahead ${name2Wins} - ${name1Wins}`
+
+                  }
+                  let overallWinner = name1Wins > name2Wins ? name1: name2
+                  if (numtbd == 0){
+                    get(ref(database, `data/${group}/wins/${week}`)).then((info) => {
+                      if (!(info.exists())){
+                        set(ref(database, "data/" + group + "/wins/" + week), {
+                          winner: overallWinner,
+                          name1Wins: name1Wins,
+                          name2Wins: name2Wins,
+                          
+                          
+                      })
+                      }
+                    })
+                    
+                  }
+                  insertAfter(h3, document.getElementById("weekResHead"))
+                  get(ref(database, `data/${group}/wins/`)).then((info) => {
+                    if (info.exists()){
+                      let winDat = info.val()
+                      let name1Wins = 0
+                      let name2Wins = 0
+                      for (let key in winDat){
+                        let p = document.createElement("p")
+                        let biggerNum, smallerNum
+                        if (winDat[key]["name1Wins"] > winDat[key]["name2Wins"]){
+                          biggerNum = winDat[key]["name1Wins"]
+                          smallerNum = winDat[key]["name2Wins"]
+                        }
+                        else {
+                          biggerNum = winDat[key]["name2Wins"]
+                          smallerNum = winDat[key]["name1Wins"]
+                        }
+                        if (winDat[key]["winner"] == name1){
+                          name1Wins++
+                          console.log("name1Wins")
+                        }
+                        else {
+                          name2Wins++
+                          console.log(name2Wins)
+
+                        }
+                        p.textContent = `Week ${key}: ` + winDat[key]["winner"] + " won " + biggerNum + " to " + smallerNum
+                        allTimeRes.appendChild(p)
+                      }
+                      let h32 = document.createElement("h3")
+                      if (name2Wins > name1Wins) {
+                        h32.textContent = `${name2} is ahead ${name2Wins} - ${name1Wins}`
+
+                      }
+                      else {
+                        h32.textContent = `${name1} is ahead ${name1Wins} - ${name2Wins}`
+
+                      }
+                      insertAfter(h32, document.getElementById("allTimeHead"))
+
+                        
+                    }
+                  })
+
+
               })
             .catch(err => console.error(err));
-      }
+      
     }
       
       

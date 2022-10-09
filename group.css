@@ -70,3 +70,28 @@
     text-align: center;
     margin-top: 15%;
 }
+#results {
+    display: none;
+    grid-template-columns: 40% 60%;
+    grid-template-areas: "week alltime";  
+}
+
+#weekRes {
+    display: grid;
+    grid-area: week;
+    background-color: #ADEFD1FF;
+    color: #00203FFF;
+    height: 100vh;
+    padding: 10px;
+    text-align: center;
+}
+#allTimeRes {
+    display: grid;
+    grid-area: alltime;
+    background-color: #00203FFF;
+    color: #ADEFD1FF;
+    height: 100vh;
+    padding: 10px;
+    text-align: center;
+    grid-template-rows: 7% repeat(20, 6%);
+}
