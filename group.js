@@ -803,7 +803,9 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
         for (let i of scheduleJSON){
             let cleanTeam1 = i["TEAM"].replace('@', '');
             let cleanTeam2 = i[week].replace('@', '');
-        
+            if (cleanTeam1 == "BYE" || cleanTeam2 == "BYE") {
+              continue
+            }
             if (team1Arr.includes(cleanTeam1) || team2Arr.includes(cleanTeam1)){
                 continue
             }
@@ -845,7 +847,7 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
             }
             playerOneTurn = !(playerOneTurn)
             count++
-            if (count == 16){
+            if (count == team1Arr.length){
                 const choose = document.getElementById("choose")
                 const doneChoose = document.getElementById("doneChoose")
                 choose.setAttribute("style", "display: none;")
