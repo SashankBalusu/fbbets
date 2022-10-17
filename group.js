@@ -938,11 +938,11 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
                   let playerTwoPicks = info.val()["playerTwoPicks"]
                   console.log(playerOnePicks)
                   console.log(playerTwoPicks)
-                  if (week%2 == 0){
-                    let temp = name1
-                    name1 = name2
-                    name2 = temp
-                  }
+                  // if (week%2 == 0){
+                  //   let temp = name1
+                  //   name1 = name2
+                  //   name2 = temp
+                  // }
 
                   let name1Wins = 0
                   let name2Wins = 0
