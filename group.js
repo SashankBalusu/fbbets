@@ -887,7 +887,7 @@ get(ref(database, `data/${group}/${week}`)).then((info) => {
             }
             playerOneTurn = !(playerOneTurn)
             count++
-            if (count == 16){
+            if (count == team1Arr.length){
                 const choose = document.getElementById("choose")
                 const doneChoose = document.getElementById("doneChoose")
                 choose.setAttribute("style", "display: none;")
