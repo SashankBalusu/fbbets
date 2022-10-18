@@ -795,7 +795,7 @@ get(ref(database, `groups/${group}/`)).then((info) => {
   });
 let slate = httpGet("https://api.sleeper.app/v1/state/nfl")
 let slateJSON = JSON.parse(slate)
-let week = slateJSON["display_week"]
+let week = slateJSON["leg"]
 let team1Arr = []
 let team2Arr = []
 get(ref(database, `data/${group}/${week}`)).then((info) => {
