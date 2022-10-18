@@ -6,7 +6,7 @@
 }
 #choose {
     display: grid;
-    grid-template-columns: 54% 60%;
+    grid-template-columns: 54vw 60vw;
     grid-template-areas: "team1 team2";
 }
 #team1 {
